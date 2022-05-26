@@ -14,7 +14,9 @@ namespace TimeTracker.Application.IRepositories
 
         void Attach(params object[] entities);
 
-        Task<TEntity> GetAsync(int id);
+        Task<TEntity?> GetAsync(int id);
+
+        Task<TEntity?> GetAsync(int id, params Expression<Func<TEntity, object>>[] includeProperties);
 
         Task<IEnumerable<TEntity>> GetAllAsync(params Expression<Func<TEntity, object>>[] includeProperties);
 

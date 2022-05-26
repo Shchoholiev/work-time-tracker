@@ -20,6 +20,8 @@ namespace TimeTracker.API.Mapping
 
             cfg.CreateMap<ProjectDTO, Project>();
 
+            cfg.CreateMap<Project, ProjectDTO>();
+
         }).CreateMapper();
 
         public Project Map(ProjectDTO source)
@@ -30,6 +32,11 @@ namespace TimeTracker.API.Mapping
         public Project Map(ProjectDTO source, Project destination)
         {
             return this._mapper.Map(source, destination);
+        }
+
+        public IEnumerable<ProjectDTO> Map(IEnumerable<Project> source)
+        {
+            return this._mapper.Map<IEnumerable<ProjectDTO>>(source);
         }
 
         public Employee Map(EmployeeDTO source)

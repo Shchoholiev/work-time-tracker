@@ -42,9 +42,15 @@ namespace TimeTracker.Infrastructure.Repositories
             this._db.AttachRange(entities);
         }
 
-        public async Task<TEntity> GetAsync(int id)
+        public async Task<TEntity?> GetAsync(int id)
         {
-            return await this._table.FirstOrDefaultAsync(i => i.Id == id);
+            return await this._table.FirstOrDefaultAsync(e => e.Id == id);
+        }
+
+        public async Task<TEntity?> GetAsync(int id, params Expression<Func<TEntity, object>>[] includeProperties)
+        {
+            var entity = this.Include(_table.Where(e => e.Id == id), includeProperties);
+            return await entity.FirstOrDefaultAsync(e => e.Id == id);
         }
 
         public async Task<IEnumerable<TEntity>> GetAllAsync(params Expression<Func<TEntity, object>>[] includeProperties)

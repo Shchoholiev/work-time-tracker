@@ -20,16 +20,17 @@ namespace TimeTracker.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Project>>> GetAllProjects()
+        public async Task<ActionResult<IEnumerable<ProjectDTO>>> GetAllProjects()
         {
             var projects = await this._projectsRepository.GetAllAsync();
-            return Ok(projects);
+            var projectDTOs = this._mapper.Map(projects);
+            return Ok(projectDTOs);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Project>> GetProject(int id)
         {
-            var project = await this._projectsRepository.GetAsync(id);
+            var project = await this._projectsRepository.GetAsync(id, p => p.Records);
             if (project == null)
             {
                 return NotFound();
