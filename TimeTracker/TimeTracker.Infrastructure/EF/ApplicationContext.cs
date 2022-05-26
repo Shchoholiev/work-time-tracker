@@ -31,6 +31,8 @@ namespace TimeTracker.Infrastructure.EF
 
         public DbSet<Employee> Employees { get; set; }
 
+        public DbSet<Sex> Sexes { get; set; }
+
         public DbSet<Role> Roles { get; set; }
 
         public DbSet<ActivityType> ActivityTypes { get; set; }
