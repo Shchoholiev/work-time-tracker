@@ -5,13 +5,13 @@ namespace TimeTracker.Application.IRepositories
 {
     public interface IRecordsRepository
     {
-        Task AddAsync(Record entity);
+        Task AddAsync(Record record);
 
-        Task UpdateAsync(Record entity);
+        Task UpdateAsync(Record record);
 
-        Task DeleteAsync(Record entity);
+        Task DeleteAsync(Record record);
 
-        Task<Record> GetOneAsync(int id);
+        Task<Record?> GetOneAsync(int id);
 
         Task<IEnumerable<Record>> GetAllAsync(Expression<Func<Record, bool>> predicate);
 
