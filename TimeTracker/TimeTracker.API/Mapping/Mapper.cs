@@ -13,13 +13,13 @@ namespace TimeTracker.API.Mapping
             cfg.CreateMap<ActivityTypeDTO, ActivityType>();
 
             cfg.CreateMap<RecordDTO, Record>();
+            cfg.CreateMap<Record, RecordDTO>();
 
             cfg.CreateMap<SexDTO, Sex>();
 
             cfg.CreateMap<EmployeeDTO, Employee>();
 
             cfg.CreateMap<ProjectDTO, Project>();
-
             cfg.CreateMap<Project, ProjectDTO>();
 
         }).CreateMapper();
@@ -47,6 +47,16 @@ namespace TimeTracker.API.Mapping
         public Record Map(RecordDTO source)
         {
             return this._mapper.Map<Record>(source);
+        }
+
+        public IEnumerable<RecordDTO> Map(IEnumerable<Record> source)
+        {
+            return this._mapper.Map<IEnumerable<RecordDTO>>(source);
+        }
+
+        public Record Map(RecordDTO source, Record destination)
+        {
+            return this._mapper.Map(source, destination);
         }
     }
 }
