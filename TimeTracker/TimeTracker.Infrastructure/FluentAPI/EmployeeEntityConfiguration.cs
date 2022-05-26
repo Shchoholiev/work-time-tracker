@@ -10,6 +10,9 @@ namespace TimeTracker.Infrastructure.FluentAPI
         {
             builder.HasMany<Record>(e => e.Records)
                    .WithOne(r => r.Employee);
+
+            builder.HasOne<Sex>(e => e.Sex)
+                   .WithMany(s => s.Employees);
         }
     }
 }

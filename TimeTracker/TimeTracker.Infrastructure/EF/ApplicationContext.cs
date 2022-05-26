@@ -22,6 +22,7 @@ namespace TimeTracker.Infrastructure.EF
             modelBuilder.ApplyConfiguration(new EmployeeEntityConfiguration());
             modelBuilder.ApplyConfiguration(new RoleEntityConfiguration());
             modelBuilder.ApplyConfiguration(new ActivityTypeEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new SexEntityConfiguration());
         }
 
         public DbSet<Project> Projects { get; set; }
