@@ -1,9 +1,9 @@
 ﻿namespace TimeTracker.Core.Entities
 {
-    public class ActivityType : EntityBase
+    public class Sex : EntityBase
     {
         public string Name { get; set; }
 
-        public List<Record>? Records { get; set; }
+        public List<Employee> Employees { get; set; }
     }
 }
