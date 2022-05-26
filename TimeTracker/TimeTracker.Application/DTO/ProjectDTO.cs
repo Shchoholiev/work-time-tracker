@@ -1,13 +1,11 @@
-﻿namespace TimeTracker.Core.Entities
+﻿namespace TimeTracker.Application.DTO
 {
-    public class Project : EntityBase
+    public class ProjectDTO : EntityBaseDTO
     {
         public string Name { get; set; }
 
         public DateTime StartDate { get; set; }
 
         public DateTime EndDate { get; set; }
-
-        public List<Record>? Records { get; set; }
     }
 }
