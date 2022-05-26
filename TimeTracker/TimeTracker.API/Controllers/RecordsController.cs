@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TimeTracker.API.Mapping;
 using TimeTracker.Application.DTO;
+using TimeTracker.Application.DTO.Create;
 using TimeTracker.Application.IRepositories;
 using TimeTracker.Core.Entities;
 
@@ -68,10 +69,17 @@ namespace TimeTracker.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] RecordDTO recordDTO)
+        public async Task<IActionResult> Create([FromBody] RecordCreateDTO recordDTO)
         {
             if (ModelState.IsValid)
             {
+                var timeTracked = await this.GetTimeTrackedForDay(recordDTO.Employee.Id, recordDTO.Year,
+                                                                  recordDTO.Month, recordDTO.Day);
+                if (timeTracked.Value + recordDTO.HoursWorked > 24)
+                {
+                    throw new ArgumentOutOfRangeException("You can't work more than 24 hours a day.");
+                }
+
                 var record = this._mapper.Map(recordDTO);
                 await this._recordsRepository.AddAsync(record);
                 return CreatedAtAction("GetRecord", new { Id = record.Id }, record);

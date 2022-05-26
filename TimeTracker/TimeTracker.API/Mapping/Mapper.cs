@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using TimeTracker.Application.DTO;
+using TimeTracker.Application.DTO.Create;
 using TimeTracker.Core.Entities;
 
 namespace TimeTracker.API.Mapping
@@ -14,6 +15,8 @@ namespace TimeTracker.API.Mapping
 
             cfg.CreateMap<RecordDTO, Record>();
             cfg.CreateMap<Record, RecordDTO>();
+            cfg.CreateMap<RecordCreateDTO, Record>()
+                .ForMember(r => r.Date, d => d.MapFrom(r => new DateTime(r.Year, r.Month, r.Day)));
 
             cfg.CreateMap<SexDTO, Sex>();
 
@@ -57,6 +60,11 @@ namespace TimeTracker.API.Mapping
         public Record Map(RecordDTO source, Record destination)
         {
             return this._mapper.Map(source, destination);
+        }
+
+        public Record Map(RecordCreateDTO source)
+        {
+            return this._mapper.Map<Record>(source);
         }
     }
 }
