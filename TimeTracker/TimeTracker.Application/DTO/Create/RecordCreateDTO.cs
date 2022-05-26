@@ -1,10 +1,14 @@
-﻿namespace TimeTracker.Application.DTO
+﻿namespace TimeTracker.Application.DTO.Create
 {
-    public class RecordDTO : EntityBaseDTO
+    public class RecordCreateDTO
     {
         public int HoursWorked { get; set; }
 
-        public DateTime Date { get; set; }
+        public int Year { get; set; }
+
+        public int Month { get; set; }
+
+        public int Day { get; set; }
 
         public EmployeeDTO Employee { get; set; }
 

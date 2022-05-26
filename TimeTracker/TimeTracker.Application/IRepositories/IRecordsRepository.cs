@@ -11,12 +11,12 @@ namespace TimeTracker.Application.IRepositories
 
         Task DeleteAsync(Record record);
 
-        Task<Record?> GetOneAsync(int id);
+        Task<Record?> GetAsync(int id);
 
         Task<IEnumerable<Record>> GetAllAsync(Expression<Func<Record, bool>> predicate);
 
         Task<int> GetTrackedTime(int employeeId, DateOnly date);
 
-        Task<int> GetTrackedTime(int employeeId, int weekNumber);
+        Task<int> GetTrackedTime(int employeeId, int year, int weekOfYear);
     }
 }

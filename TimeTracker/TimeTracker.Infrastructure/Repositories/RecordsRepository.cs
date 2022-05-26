@@ -3,7 +3,6 @@ using System.Linq.Expressions;
 using TimeTracker.Application.IRepositories;
 using TimeTracker.Core.Entities;
 using TimeTracker.Infrastructure.EF;
-using System.Globalization;
 
 namespace TimeTracker.Infrastructure.Repositories
 {
@@ -39,7 +38,7 @@ namespace TimeTracker.Infrastructure.Repositories
             await this.SaveAsync();
         }
 
-        public async Task<Record?> GetOneAsync(int id)
+        public async Task<Record?> GetAsync(int id)
         {
             return await this._table
                              .Include(r => r.Project)
@@ -64,16 +63,32 @@ namespace TimeTracker.Infrastructure.Repositories
         {
             return await this._table.AsNoTracking()
                                     .Where(r => r.Employee.Id == employeeId 
-                                          && r.Date.ToShortDateString() == date.ToShortDateString())
+                                          && r.Date.Year == date.Year
+                                          && r.Date.Month == date.Month
+                                          && r.Date.DayOfYear == date.DayOfYear)
                                     .SumAsync(r => r.HoursWorked);
         }
 
-        public async Task<int> GetTrackedTime(int employeeId, int weekNumber)
+        public async Task<int> GetTrackedTime(int employeeId, int year, int weekOfYear)
         {
-            
+            var start = this.GetFirstMondayNumber(year);
+            var end = 0;
+
+            if (weekOfYear == 1)
+            {
+                end = start - 1;
+                start = 1;
+            }
+            else
+            {
+                start += 7 * (weekOfYear - 2);
+                end = start + 6;
+            }
+
             return await this._table.AsNoTracking()
                                     .Where(r => r.Employee.Id == employeeId
-                                           && this.GetWeekOfYear(r.Date) == weekNumber)
+                                           && r.Date.Year == year
+                                           && r.Date.DayOfYear >= start && r.Date.DayOfYear <= end)
                                     .SumAsync(r => r.HoursWorked);
         }
 
@@ -82,11 +97,17 @@ namespace TimeTracker.Infrastructure.Repositories
             await this._db.SaveChangesAsync();
         }
 
-        private int GetWeekOfYear(DateTime date)
+        private int GetFirstMondayNumber(int year)
         {
-            var culture = new CultureInfo("uk-UA");
-            var calendar = culture.Calendar;
-            return calendar.GetWeekOfYear(date, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
+            var date = new DateOnly(year, 1, 1);
+            var mondayNumber = 1;
+            while (date.DayOfWeek != DayOfWeek.Monday)
+            {
+                date = date.AddDays(1);
+                mondayNumber++;
+            }
+
+            return mondayNumber;
         }
     }
 }
