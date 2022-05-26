@@ -8,6 +8,8 @@
 
         public RoleDTO Role { get; set; }
 
+        public ActivityTypeDTO ActivityType { get; set; }
+
         public ProjectDTO Project { get; set; }
     }
 }
