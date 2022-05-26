@@ -8,15 +8,13 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\TimeTracker.Application\TimeTracker.Application.csproj" />
     <ProjectReference Include="..\TimeTracker.Core\TimeTracker.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="DataInitialization\" />
   </ItemGroup>
 
 </Project>
