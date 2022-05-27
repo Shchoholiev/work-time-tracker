@@ -27,5 +27,7 @@ namespace TimeTracker.Application.IRepositories
         Task<PagedList<TEntity>> GetPageAsync(PageParameters pageParameters);
 
         Task SaveAsync();
+
+        public void Detach(object entity);
     }
 }

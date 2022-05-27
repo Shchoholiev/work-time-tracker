@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TimeTracker.API.Mapping;
 using TimeTracker.Application.DTO;
-using TimeTracker.Application.DTO.Create;
 using TimeTracker.Application.IRepositories;
 using TimeTracker.Core.Entities;
 
@@ -13,13 +12,17 @@ namespace TimeTracker.API.Controllers
     {
         private readonly IRecordsRepository _recordsRepository;
 
+        private readonly IGenericRepository<Project> _projectsRepository;
+
         private readonly ILogger<ProjectsController> _logger;
 
         private readonly Mapper _mapper = new();
 
-        public RecordsController(IRecordsRepository recordsRepository, ILogger<ProjectsController> logger)
+        public RecordsController(IRecordsRepository recordsRepository, ILogger<ProjectsController> logger,
+                                 IGenericRepository<Project> projectsRepository)
         {
             this._recordsRepository = recordsRepository;
+            this._projectsRepository = projectsRepository;
             this._logger = logger;
         }
 
@@ -90,12 +93,19 @@ namespace TimeTracker.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] RecordCreateDTO recordDTO)
+        public async Task<IActionResult> Create([FromBody] RecordDTO recordDTO)
         {
             if (ModelState.IsValid)
             {
-                var timeTracked = await this.GetTimeTrackedForDay(recordDTO.Employee.Id, recordDTO.Year,
-                                                                  recordDTO.Month, recordDTO.Day);
+                var project = await this._projectsRepository.GetAsync(recordDTO.Project.Id);
+                if (recordDTO.Date < project.StartDate || recordDTO.Date > project.EndDate)
+                {
+                    throw new ArgumentOutOfRangeException("Date", "Your date is out of the project's time range.");
+                }
+                this._projectsRepository.Detach(project);
+
+                var timeTracked = await this.GetTimeTrackedForDay(recordDTO.Employee.Id, recordDTO.Date.Year,
+                                                             recordDTO.Date.Month, recordDTO.Date.Day);
                 if (timeTracked.Value + recordDTO.HoursWorked > 24)
                 {
                     throw new ArgumentOutOfRangeException("HoursWorked", 
@@ -109,6 +119,7 @@ namespace TimeTracker.API.Controllers
 
                 return CreatedAtAction("GetRecord", new { Id = record.Id }, record);
             }
+            this._logger.LogInformation($"RecordCreateDTO is not valid.");
 
             return BadRequest(ModelState);
         }
@@ -132,6 +143,7 @@ namespace TimeTracker.API.Controllers
 
                 return NoContent();
             }
+            this._logger.LogInformation($"RecordDTO is not valid.");
 
             return BadRequest(ModelState);
         }

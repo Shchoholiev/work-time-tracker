@@ -78,15 +78,20 @@ namespace TimeTracker.Infrastructure.Repositories
             return new PagedList<TEntity>(entities, pageParameters, totalCount);
         }
 
+        public async Task SaveAsync()
+        {
+            await this._db.SaveChangesAsync();
+        }
+
+        public void Detach(object entity)
+        {
+            this._db.Entry(entity).State = EntityState.Detached;
+        }
+
         private IQueryable<TEntity> Include(IQueryable<TEntity> query, params Expression<Func<TEntity, object>>[] includeProperties)
         {
             return includeProperties.Aggregate(query, (current, includeProperty)
                                                 => current.Include(includeProperty));
-        }
-
-        public async Task SaveAsync()
-        {
-            await this._db.SaveChangesAsync();
         }
     }
 }

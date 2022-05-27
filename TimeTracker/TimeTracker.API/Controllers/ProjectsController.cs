@@ -60,6 +60,7 @@ namespace TimeTracker.API.Controllers
 
                 return CreatedAtAction("GetProject", new { Id = project.Id }, project);
             }
+            this._logger.LogInformation($"ProjectDTO is not valid.");
 
             return BadRequest(ModelState);
         }
@@ -83,6 +84,7 @@ namespace TimeTracker.API.Controllers
 
                 return NoContent();
             }
+            this._logger.LogInformation($"ProjectDTO is not valid.");
 
             return BadRequest(ModelState);
         }
