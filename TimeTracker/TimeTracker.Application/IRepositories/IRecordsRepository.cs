@@ -15,8 +15,8 @@ namespace TimeTracker.Application.IRepositories
 
         Task<IEnumerable<Record>> GetAllAsync(Expression<Func<Record, bool>> predicate);
 
-        Task<int> GetTrackedTime(int employeeId, DateOnly date);
+        Task<int> GetTrackedTimeAsync(int employeeId, DateOnly date);
 
-        Task<int> GetTrackedTime(int employeeId, int year, int weekOfYear);
+        Task<int> GetTrackedTimeAsync(int employeeId, int year, int weekOfYear);
     }
 }

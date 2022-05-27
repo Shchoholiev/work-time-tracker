@@ -31,7 +31,7 @@ namespace TimeTracker.API.Controllers
             [FromQuery] int year, [FromQuery] int month, [FromQuery] int day)
         {
             var date = new DateOnly(year, month, day);
-            var time = await this._recordsRepository.GetTrackedTime(employeeId, date);
+            var time = await this._recordsRepository.GetTrackedTimeAsync(employeeId, date);
 
             this._logger.LogInformation($"Returned time tracked for employee with id: {employeeId} on {date}.");
 
@@ -42,7 +42,7 @@ namespace TimeTracker.API.Controllers
         public async Task<ActionResult<int>> GetTimeTrackedForWeek([FromQuery] int employeeId,
             [FromQuery] int year, [FromQuery] int weekOfYear)
         {
-            var time = await this._recordsRepository.GetTrackedTime(employeeId, year, weekOfYear);
+            var time = await this._recordsRepository.GetTrackedTimeAsync(employeeId, year, weekOfYear);
 
             this._logger.LogInformation($"Returned time tracked for employee with id: {employeeId} during " +
                                         $"{weekOfYear} week of {year}.");
