@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using TimeTracker.Application.DTO;
-using TimeTracker.Application.DTO.Create;
 using TimeTracker.Core.Entities;
 
 namespace TimeTracker.API.Mapping
@@ -15,12 +14,11 @@ namespace TimeTracker.API.Mapping
 
             cfg.CreateMap<RecordDTO, Record>();
             cfg.CreateMap<Record, RecordDTO>();
-            cfg.CreateMap<RecordCreateDTO, Record>()
-                .ForMember(r => r.Date, d => d.MapFrom(r => new DateTime(r.Year, r.Month, r.Day)));
 
             cfg.CreateMap<SexDTO, Sex>();
 
             cfg.CreateMap<EmployeeDTO, Employee>();
+            cfg.CreateMap<Employee, EmployeeDTO>();
 
             cfg.CreateMap<ProjectDTO, Project>();
             cfg.CreateMap<Project, ProjectDTO>();
@@ -42,11 +40,6 @@ namespace TimeTracker.API.Mapping
             return this._mapper.Map<IEnumerable<ProjectDTO>>(source);
         }
 
-        public Employee Map(EmployeeDTO source)
-        {
-            return this._mapper.Map<Employee>(source);
-        }
-
         public Record Map(RecordDTO source)
         {
             return this._mapper.Map<Record>(source);
@@ -62,9 +55,19 @@ namespace TimeTracker.API.Mapping
             return this._mapper.Map(source, destination);
         }
 
-        public Record Map(RecordCreateDTO source)
+        public Employee Map(EmployeeDTO source)
         {
-            return this._mapper.Map<Record>(source);
+            return this._mapper.Map<Employee>(source);
+        }
+
+        public IEnumerable<EmployeeDTO> Map(IEnumerable<Employee> source)
+        {
+            return this._mapper.Map<IEnumerable<EmployeeDTO>>(source);
+        }
+
+        public Employee Map(EmployeeDTO source, Employee destination)
+        {
+            return this._mapper.Map(source, destination);
         }
     }
 }
