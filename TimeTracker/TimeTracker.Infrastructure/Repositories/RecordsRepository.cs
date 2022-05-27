@@ -59,7 +59,7 @@ namespace TimeTracker.Infrastructure.Repositories
                                     .ToListAsync();
         }
 
-        public async Task<int> GetTrackedTime(int employeeId, DateOnly date)
+        public async Task<int> GetTrackedTimeAsync(int employeeId, DateOnly date)
         {
             return await this._table.AsNoTracking()
                                     .Where(r => r.Employee.Id == employeeId 
@@ -69,7 +69,7 @@ namespace TimeTracker.Infrastructure.Repositories
                                     .SumAsync(r => r.HoursWorked);
         }
 
-        public async Task<int> GetTrackedTime(int employeeId, int year, int weekOfYear)
+        public async Task<int> GetTrackedTimeAsync(int employeeId, int year, int weekOfYear)
         {
             var start = this.GetFirstMondayNumber(year);
             var end = 0;
