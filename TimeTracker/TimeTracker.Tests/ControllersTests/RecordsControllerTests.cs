@@ -1,12 +1,9 @@
 ﻿using FakeItEasy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TimeTracker.API.Controllers;
-using TimeTracker.Application.DTO;
 using TimeTracker.Application.IRepositories;
 using TimeTracker.Core.Entities;
 using Xunit;
