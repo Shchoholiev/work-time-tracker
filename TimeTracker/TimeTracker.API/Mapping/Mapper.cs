@@ -9,6 +9,7 @@ namespace TimeTracker.API.Mapping
         private readonly IMapper _mapper = new MapperConfiguration(cfg =>
         {
             cfg.CreateMap<RoleDTO, Role>();
+            cfg.CreateMap<Role, RoleDTO>();
 
             cfg.CreateMap<ActivityTypeDTO, ActivityType>();
 
@@ -66,6 +67,21 @@ namespace TimeTracker.API.Mapping
         }
 
         public Employee Map(EmployeeDTO source, Employee destination)
+        {
+            return this._mapper.Map(source, destination);
+        }
+
+        public Role Map(RoleDTO source)
+        {
+            return this._mapper.Map<Role>(source);
+        }
+
+        public IEnumerable<RoleDTO> Map(IEnumerable<Role> source)
+        {
+            return this._mapper.Map<IEnumerable<RoleDTO>>(source);
+        }
+
+        public Role Map(RoleDTO source, Role destination)
         {
             return this._mapper.Map(source, destination);
         }
