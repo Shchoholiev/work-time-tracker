@@ -1,4 +1,5 @@
 ﻿using Serilog;
+using TimeTracker.API.ExceptionHandling;
 
 namespace TimeTracker.API
 {
@@ -14,6 +15,11 @@ namespace TimeTracker.API
             logging.AddSerilog(logger);
 
             return logging;
+        }
+
+        public static void ConfigureCustomExceptionMiddleware(this IApplicationBuilder app)
+        {
+            app.UseMiddleware<ExceptionMiddleware>();
         }
     }
 }
