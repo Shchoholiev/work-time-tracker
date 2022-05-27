@@ -12,11 +12,13 @@ namespace TimeTracker.API.Mapping
             cfg.CreateMap<Role, RoleDTO>();
 
             cfg.CreateMap<ActivityTypeDTO, ActivityType>();
+            cfg.CreateMap<ActivityType, ActivityTypeDTO>();
 
             cfg.CreateMap<RecordDTO, Record>();
             cfg.CreateMap<Record, RecordDTO>();
 
             cfg.CreateMap<SexDTO, Sex>();
+            cfg.CreateMap<Sex, SexDTO>();
 
             cfg.CreateMap<EmployeeDTO, Employee>();
             cfg.CreateMap<Employee, EmployeeDTO>();
@@ -76,12 +78,37 @@ namespace TimeTracker.API.Mapping
             return this._mapper.Map<Role>(source);
         }
 
+        public RoleDTO Map(Role source)
+        {
+            return this._mapper.Map<RoleDTO>(source);
+        }
+
         public IEnumerable<RoleDTO> Map(IEnumerable<Role> source)
         {
             return this._mapper.Map<IEnumerable<RoleDTO>>(source);
         }
 
         public Role Map(RoleDTO source, Role destination)
+        {
+            return this._mapper.Map(source, destination);
+        }
+
+        public ActivityType Map(ActivityTypeDTO source)
+        {
+            return this._mapper.Map<ActivityType>(source);
+        }
+
+        public ActivityTypeDTO Map(ActivityType source)
+        {
+            return this._mapper.Map<ActivityTypeDTO>(source);
+        }
+
+        public IEnumerable<ActivityTypeDTO> Map(IEnumerable<ActivityType> source)
+        {
+            return this._mapper.Map<IEnumerable<ActivityTypeDTO>>(source);
+        }
+
+        public ActivityType Map(ActivityTypeDTO source, ActivityType destination)
         {
             return this._mapper.Map(source, destination);
         }

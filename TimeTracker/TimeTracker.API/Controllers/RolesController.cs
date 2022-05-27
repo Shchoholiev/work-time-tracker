@@ -47,17 +47,19 @@ namespace TimeTracker.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Role>> GetRole(int id)
+        public async Task<ActionResult<RoleDTO>> GetRole(int id)
         {
-            var role = await this._rolesRepository.GetAsync(id, e => e.Records);
+            var role = await this._rolesRepository.GetAsync(id);
             if (role == null)
             {
                 this._logger.LogInformation($"Role with id: {id} was not found in db.");
                 return NotFound();
             }
+            var roleDTO = this._mapper.Map(role);
+
             this._logger.LogInformation($"Returned role with id: {id}.");
 
-            return role;
+            return roleDTO;
         }
 
         [HttpPost]
