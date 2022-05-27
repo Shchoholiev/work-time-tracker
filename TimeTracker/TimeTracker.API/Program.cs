@@ -17,6 +17,7 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+// Db Initialization, remove if you don't want to re-create Db with start data.
 var scope = app.Services.CreateScope();
 var context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
 await DbInitializer.Initialize(context);
