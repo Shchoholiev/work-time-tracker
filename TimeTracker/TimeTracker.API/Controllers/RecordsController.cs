@@ -13,11 +13,14 @@ namespace TimeTracker.API.Controllers
     {
         private readonly IRecordsRepository _recordsRepository;
 
+        private readonly ILogger<ProjectsController> _logger;
+
         private readonly Mapper _mapper = new();
 
-        public RecordsController(IRecordsRepository recordsRepository)
+        public RecordsController(IRecordsRepository recordsRepository, ILogger<ProjectsController> logger)
         {
             this._recordsRepository = recordsRepository;
+            this._logger = logger;
         }
 
         [HttpGet("time-tracked-for-day")]
@@ -25,14 +28,23 @@ namespace TimeTracker.API.Controllers
             [FromQuery] int year, [FromQuery] int month, [FromQuery] int day)
         {
             var date = new DateOnly(year, month, day);
-            return await this._recordsRepository.GetTrackedTime(employeeId, date);
+            var time = await this._recordsRepository.GetTrackedTime(employeeId, date);
+
+            this._logger.LogInformation($"Returned time tracked for employee with id: {employeeId} on {date}.");
+
+            return time;
         }
 
         [HttpGet("time-tracked-for-week")]
         public async Task<ActionResult<int>> GetTimeTrackedForWeek([FromQuery] int employeeId,
             [FromQuery] int year, [FromQuery] int weekOfYear)
         {
-            return await this._recordsRepository.GetTrackedTime(employeeId, year, weekOfYear);
+            var time = await this._recordsRepository.GetTrackedTime(employeeId, year, weekOfYear);
+
+            this._logger.LogInformation($"Returned time tracked for employee with id: {employeeId} during " +
+                                        $"{weekOfYear} week of {year}.");
+
+            return time;
         }
 
         [HttpGet("for-day")]
@@ -43,6 +55,9 @@ namespace TimeTracker.API.Controllers
             var records = await this._recordsRepository.GetAllAsync(r => r.Project.Id == projectId
                 && r.Date.ToShortDateString() == date.ToShortDateString());
             var recordDTOs = this._mapper.Map(records);
+
+            this._logger.LogInformation($"Returned all records for project with id: {projectId} on {date}.");
+
             return Ok(records);
         }
 
@@ -53,6 +68,10 @@ namespace TimeTracker.API.Controllers
             var records = await this._recordsRepository.GetAllAsync(r => r.Project.Id == projectId
                 && r.Date.Year == year && r.Date.Month == month);
             var recordDTOs = this._mapper.Map(records);
+
+            this._logger.LogInformation($"Returned all records for project with id: {projectId} " +
+                                        $"during {month}/{year}.");
+
             return Ok(records);
         }
 
@@ -62,8 +81,10 @@ namespace TimeTracker.API.Controllers
             var record = await this._recordsRepository.GetAsync(id);
             if (record == null)
             {
+                this._logger.LogInformation($"Record with id: {id} was not found in db.");
                 return NotFound();
             }
+            this._logger.LogInformation($"Returned record with id: {id}.");
 
             return record;
         }
@@ -77,11 +98,15 @@ namespace TimeTracker.API.Controllers
                                                                   recordDTO.Month, recordDTO.Day);
                 if (timeTracked.Value + recordDTO.HoursWorked > 24)
                 {
-                    throw new ArgumentOutOfRangeException("You can't work more than 24 hours a day.");
+                    throw new ArgumentOutOfRangeException("HoursWorked", 
+                        "You can't work more than 24 hours a day.");
                 }
 
                 var record = this._mapper.Map(recordDTO);
                 await this._recordsRepository.AddAsync(record);
+
+                this._logger.LogInformation($"Created record with id: {record.Id}.");
+
                 return CreatedAtAction("GetRecord", new { Id = record.Id }, record);
             }
 
@@ -96,12 +121,15 @@ namespace TimeTracker.API.Controllers
                 var record = await this._recordsRepository.GetAsync(id);
                 if (record == null)
                 {
+                    this._logger.LogInformation($"Record with id: {id} was not found in db.");
                     return NotFound();
                 }
 
                 this._mapper.Map(recordDTO, record);
-
                 await this._recordsRepository.UpdateAsync(record);
+
+                this._logger.LogInformation($"Updated record with id: {id}.");
+
                 return NoContent();
             }
 
@@ -114,10 +142,14 @@ namespace TimeTracker.API.Controllers
             var record = await this._recordsRepository.GetAsync(id);
             if (record == null)
             {
+                this._logger.LogInformation($"Record with id: {id} was not found in db.");
                 return NotFound();
             }
 
             await this._recordsRepository.DeleteAsync(record);
+
+            this._logger.LogInformation($"Deleted record with id: {id}.");
+
             return NoContent();
         }
     }
