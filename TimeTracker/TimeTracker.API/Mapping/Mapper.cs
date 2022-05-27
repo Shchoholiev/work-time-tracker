@@ -112,5 +112,25 @@ namespace TimeTracker.API.Mapping
         {
             return this._mapper.Map(source, destination);
         }
+
+        public Sex Map(SexDTO source)
+        {
+            return this._mapper.Map<Sex>(source);
+        }
+
+        public SexDTO Map(Sex source)
+        {
+            return this._mapper.Map<SexDTO>(source);
+        }
+
+        public IEnumerable<SexDTO> Map(IEnumerable<Sex> source)
+        {
+            return this._mapper.Map<IEnumerable<SexDTO>>(source);
+        }
+
+        public Sex Map(SexDTO source, Sex destination)
+        {
+            return this._mapper.Map(source, destination);
+        }
     }
 }
